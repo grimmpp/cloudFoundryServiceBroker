@@ -1,0 +1,11 @@
+applications:
+- name: cf-broker
+  buildpacks:
+  - https://github.com/cloudfoundry/python-buildpack.git
+  command: python main.py
+  disk_quota: 1G
+  instances: 1
+  memory: 1G
+  routes:
+  - route: cf-broker.dev.cfdev.sh
+  stack: cflinuxfs3

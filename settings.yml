@@ -1,0 +1,9 @@
+CF_API:
+  url: https://api.dev.cfdev.sh
+  username: admin
+  password: admin
+  skip-ssl-validation: true
+
+Broker_API:
+  username: admin
+  password: admin
