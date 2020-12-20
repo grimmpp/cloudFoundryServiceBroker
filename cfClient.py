@@ -5,17 +5,21 @@ import requests
 import json
 import os
 
+from applicationSettings import ApplicationSettings
+
 class CfClient(CloudFoundryClient):
     
-    def __init__(self):
-        self.target_endpoint = 'https://api.dev.cfdev.sh'
+    def __init__(self, appSettings: ApplicationSettings):
+        self.appSettings = appSettings
+        target_endpoint = self.appSettings['CF_API']['url']
+        verifySslCert = not self.appSettings['CF_API']['skip-ssl-validation']
         proxy = dict(http=os.environ.get('HTTP_PROXY', ''), https=os.environ.get('HTTPS_PROXY', ''))
-        super().__init__(self.target_endpoint, proxy=proxy, verify=False)
-        self.init_with_user_credentials('admin', 'admin')
+        super().__init__(target_endpoint, proxy=proxy, verify=verifySslCert)
+        self.init_with_user_credentials(self.appSettings['CF_API']['username'], self.appSettings['CF_API']['password'])
 
 
     def getQuotaByName(self, name: str) -> object:
-        url = self.target_endpoint + '/v3/organization_quotas' + '?names=' + name
+        url = self.appSettings['CF_API']['url'] + '/v3/organization_quotas' + '?names=' + name
         # print("requested path: "+url)
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self._access_token}
@@ -34,7 +38,7 @@ class CfClient(CloudFoundryClient):
 
 
     def setQuota(self, orgGuid: str, quotaGuid:str):
-        url = self.target_endpoint + '/v2/organizations/' + orgGuid
+        url = self.appSettings['CF_API']['url'] + '/v2/organizations/' + orgGuid
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self._access_token}
         data = '{"quota_definition_guid": "'+quotaGuid+'"}'
         return requests.put(url, data, headers=headers, verify=False).json()

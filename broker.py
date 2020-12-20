@@ -17,12 +17,14 @@ import json
 import logging
 
 from cfClient import CfClient
+from applicationSettings import ApplicationSettings
 from planManagerCfOrg import PlanManagerCfOrg
 
 class CfBroker(ServiceBroker):
 
-    def __init__(self):
-        self.cfClient = CfClient()
+    def __init__(self, appSettings: ApplicationSettings, cfClient: CfClient):
+        self.appSettings = appSettings
+        self.cfClient = cfClient
         self.planManagerCfOrg = PlanManagerCfOrg(self.cfClient)
 
 

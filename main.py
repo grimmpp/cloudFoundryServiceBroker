@@ -4,12 +4,13 @@ import logging
 from applicationSettings import ApplicationSettings
 
 from broker import CfBroker
+from cfClient import CfClient
 from openbrokerapi import api
 
 
-applicationSettings = ApplicationSettings()
-
-
+appSettings = ApplicationSettings()
+cfClient = CfClient(appSettings)
+cfBroker = CfBroker(appSettings, cfClient)
 
 
 # print('Start server on 127.0.0.1:'+str(port))
@@ -32,6 +33,6 @@ applicationSettings = ApplicationSettings()
 # or register blueprint to your own FlaskApp instance
 app = Flask(__name__)
 # logger = basic_config()  # Use root logger with a basic configuration provided by openbrokerapi.log_util
-openbroker_bp = api.get_blueprint(CfBroker(), api.BrokerCredentials("admin", "admin"), logging)
+openbroker_bp = api.get_blueprint(cfBroker, api.BrokerCredentials(appSettings['Broker_API']['username'], appSettings['Broker_API']['password']), logging)
 app.register_blueprint(openbroker_bp)
-app.run("0.0.0.0", port=port)
+app.run("0.0.0.0", port=appSettings['Broker_API']['port'])
