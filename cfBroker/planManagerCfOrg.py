@@ -16,21 +16,21 @@ from openbrokerapi.service_broker import (
 
 class PlanManagerCfOrg(ServiceBroker):
     
-    PLAN_ID_CF_ORG = '29dcc9ea-629c-4307-b0fb-a0f6c047e788'
+    PLAN_ID = '29dcc9ea-629c-4307-b0fb-a0f6c047e788'
 
     def __init__(self, cfClient):
         self.cfClient = cfClient
 
 
     def getPlanId(self) -> str:
-        return self.PLAN_ID_CF_ORG
+        return self.PLAN_ID
 
 
     def getServicePlan(self) -> ServicePlan:
         return ServicePlan(
-            id=self.PLAN_ID_CF_ORG,
+            id=self.PLAN_ID,
             name='CF Org',
-            description='plan description',
+            description='This service plan delivers a Cloud Foundry Organization.',
             bindable=False
         )
 
