@@ -16,11 +16,11 @@ from openbrokerapi.service_broker import (
 import json
 import logging
 
-from cfClient import CfClient
-from applicationSettings import ApplicationSettings
-from planManagerCfOrg import PlanManagerCfOrg
+from cfBroker.cfClient import CfClient
+from cfBroker.applicationSettings import ApplicationSettings
+from cfBroker.planManagerCfOrg import PlanManagerCfOrg
 
-class CfBroker(ServiceBroker):
+class Broker(ServiceBroker):
 
     def __init__(self, appSettings: ApplicationSettings, cfClient: CfClient):
         self.appSettings = appSettings

@@ -2,6 +2,16 @@ Generate requirements.txt
     pip3 freeze > requirements.txt
 
 
+### How to handle python modules
+https://python-packaging-tutorial.readthedocs.io/en/latest/setup_py.html
+https://stackoverflow.com/questions/1896918/running-unittest-with-typical-test-directory-structure
+
+### test
+python setup.py develop
+python -m unittest discover
+
+
+
 ### create service broker
 cf create-service-broker cf-broker admin admin http://cf-broker.com:5000
 cf enable-service-access "Cloud Foundry"

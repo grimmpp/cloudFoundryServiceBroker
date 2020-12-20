@@ -5,7 +5,7 @@ import requests
 import json
 import os
 
-from applicationSettings import ApplicationSettings
+from cfBroker.applicationSettings import ApplicationSettings
 
 class CfClient(CloudFoundryClient):
     
