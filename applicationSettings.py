@@ -7,7 +7,7 @@ class ApplicationSettings(dict):
 
     def __init__(self):
         fullFilename = os.path.abspath(os.getcwd()) + os.sep +  "settings.yml"
-        print("path: "+fullFilename)
+        # print("path: "+fullFilename)
 
         with open(fullFilename, 'r') as file: self.update( yaml.load(file, Loader=yaml.FullLoader) )
 

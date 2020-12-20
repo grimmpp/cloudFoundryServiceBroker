@@ -3,6 +3,8 @@ CF_API:
   username: admin
   password: admin
   skip-ssl-validation: true
+  HTTP_PROXY:
+  HTTPS_PROXY:
 
 Broker_API:
   port: 5000

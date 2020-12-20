@@ -11,11 +11,15 @@ class CfClient(CloudFoundryClient):
     
     def __init__(self, appSettings: ApplicationSettings):
         self.appSettings = appSettings
-        target_endpoint = self.appSettings['CF_API']['url']
-        verifySslCert = not self.appSettings['CF_API']['skip-ssl-validation']
-        proxy = dict(http=os.environ.get('HTTP_PROXY', ''), https=os.environ.get('HTTPS_PROXY', ''))
+
+        target_endpoint = appSettings['CF_API']['url']
+        username = appSettings['CF_API']['username']
+        password = appSettings['CF_API']['password']
+        proxy = dict(http=appSettings['CF_API']['HTTP_PROXY'], https=appSettings['CF_API']['HTTPS_PROXY'])
+        verifySslCert = not appSettings['CF_API']['skip-ssl-validation']
+
         super().__init__(target_endpoint, proxy=proxy, verify=verifySslCert)
-        self.init_with_user_credentials(self.appSettings['CF_API']['username'], self.appSettings['CF_API']['password'])
+        self.init_with_user_credentials(username, password)
 
 
     def getQuotaByName(self, name: str) -> object:
