@@ -1,17 +1,13 @@
 from flask import Flask
 
 import logging
-import os
+from applicationSettings import ApplicationSettings
 
 from broker import CfBroker
 from openbrokerapi import api
 
 
-
-###    Init
-
-port = os.getenv("PORT", 5000)
-
+applicationSettings = ApplicationSettings()
 
 
 

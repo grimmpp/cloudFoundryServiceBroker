@@ -17,11 +17,14 @@ import json
 import logging
 
 from cfClient import CfClient
+from planManagerCfOrg import PlanManagerCfOrg
 
 class CfBroker(ServiceBroker):
 
     def __init__(self):
         self.cfClient = CfClient()
+        self.planManagerCfOrg = PlanManagerCfOrg(self.cfClient)
+
 
     def catalog(self) -> Union[Service, List[Service]]:
         return Service(
@@ -31,30 +34,20 @@ class CfBroker(ServiceBroker):
             bindable=False,
             instances_retrievable=True,
             plans=[
-                ServicePlan(
-                    id='29dcc9ea-629c-4307-b0fb-a0f6c047e788',
-                    name='CF Org',
-                    description='plan description',
-                    bindable=False
-                )
+                self.planManagerCfOrg.getServicePlan()
             ]
         )
 
     def provision(self,
-                  instance_id: str,
-                  details: ProvisionDetails,
-                  async_allowed: bool,
-                  **kwargs) -> ProvisionedServiceSpec:
-        
-        if not ('name' in details.parameters):
-            raise Exception("No parameter name is given.")
-
-        self.cfClient = CfClient()
-
-        orgGuid = self.cfClient.v3.organizations.create(details.parameters['name'], suspended=False).get('guid')
-
-# ---> small hack: reference to org (org Guid) is stored in dashboard_url field of service instance.
-        return ProvisionedServiceSpec(dashboard_url=orgGuid)
+                instance_id: str,
+                details: ProvisionDetails,
+                async_allowed: bool,
+                **kwargs) -> ProvisionedServiceSpec:
+    
+        if details.plan_id == self.planManagerCfOrg.getPlanId():
+            return self.planManagerCfOrg.provision(instance_id, details, async_allowed)
+        else:
+            return None
 
 
     def deprovision(self,
@@ -63,12 +56,11 @@ class CfBroker(ServiceBroker):
                     async_allowed: bool,
                     **kwargs) -> DeprovisionServiceSpec:
         
-        serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
-        orgGuid = serviceInstance.get("dashboard_url")
+        if details.plan_id == self.planManagerCfOrg.getPlanId():
+            return self.planManagerCfOrg.deprovision(instance_id, details, async_allowed)
 
-        self.cfClient.v3.organizations.remove(orgGuid)
-
-        return DeprovisionServiceSpec(is_async=False)
+        else: 
+            return DeprovisionServiceSpec(is_async=False)
 
 
     def update(self,
@@ -78,17 +70,7 @@ class CfBroker(ServiceBroker):
                **kwargs
                ) -> UpdateServiceSpec:
 
-        serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
-        orgGuid = serviceInstance.get("dashboard_url")
-
-        # Change quota
-        if 'quota' in details.parameters:
-            quotaName = details.parameters.get('quota')
-            quotaGuid = self.cfClient.getQuotaGuidByName(quotaName)
-            self.cfClient.setQuota(orgGuid, quotaGuid)
-
-        if 'name' in details.parameters:
-            orgName = details.parameters.get('name')
-            self.cfClient.v3.organizations.update(orgGuid, orgName, suspended=True)
+        if details.plan_id == self.planManagerCfOrg.getPlanId():
+            return self.planManagerCfOrg.update(instance_id, details, async_allowed)
             
         return UpdateServiceSpec(False)
