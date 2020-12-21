@@ -5,6 +5,7 @@ from cfBroker.server import Server
 
 appSettings = ApplicationSettings()
 cfClient = CfClient(appSettings)
+cfClient.connect()
 cfBroker = Broker(appSettings, cfClient)
 
 server = Server(cfBroker, appSettings)

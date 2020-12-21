@@ -8,7 +8,7 @@ https://stackoverflow.com/questions/1896918/running-unittest-with-typical-test-d
 
 ### test
 python setup.py develop
-python -m unittest discover
+python -m unittest discover -v
 
 
 
