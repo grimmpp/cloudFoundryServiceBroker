@@ -10,7 +10,7 @@ from openbrokerapi import api
 
 
 class Server():
-    def init(self, broker: Broker, appSettings: ApplicationSettings):
+    def __init__(self, broker: Broker, appSettings: ApplicationSettings):
         self.broker = broker
         self.appSettings = appSettings
 
@@ -19,9 +19,9 @@ class Server():
         brokerUsername = self.appSettings['Broker_API']['username']
         brokerPassword = self.appSettings['Broker_API']['password']
 
-        print('Start server on port: %' % (port))
+        print('Start server on port: {}'.format(port))
         print('Check the catalog at: ')
-        print('> curl http://127.0.0.1:%/v2/catalog -H "X-Broker-API-Version: 2.14"' % port)
+        print('> curl http://127.0.0.1:{}/v2/catalog -H "X-Broker-API-Version: 2.14"'.format(port))
         app = Flask(__name__)
         openbroker_bp = api.get_blueprint(self.broker, api.BrokerCredentials(brokerUsername, brokerPassword), logging)
         app.register_blueprint(openbroker_bp)

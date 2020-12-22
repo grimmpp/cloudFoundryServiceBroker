@@ -23,6 +23,7 @@ class CfClient(CloudFoundryClient):
 
         super().__init__(target_endpoint, proxy=proxy, verify=verifySslCert)
         self.init_with_user_credentials(username, password)
+        print('Connection to Cloud Foundry is established!')
 
     # needs to be done for testing
     def getAccessToken(self):
