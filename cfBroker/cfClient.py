@@ -46,13 +46,13 @@ class CfClient(CloudFoundryClient):
     # needs to be done for testing
     def getAccessToken(self):
         try:
-            return self.access_token
+            return self._access_token
         except:
             return ''
 
-
     def getQuotaByName(self, name: str) -> object:
-        url = self.getBaseUrl() + '/v3/organization_quotas' + '?names=' + name
+        # url = self.getBaseUrl() + '/v3/organization_quotas' + '?names=' + name
+        url = '{}/v2/quota_definitions?q=name%3A{}'.format(self.getBaseUrl(), name)
         # print("requested path: "+url)
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self.getAccessToken()}
@@ -63,13 +63,13 @@ class CfClient(CloudFoundryClient):
         # print( json.dumps( response ))
 
         for resource in response['resources']:
-            if name == resource['name']:
+            if name == resource['entity']['name']:
                 return resource
         return None
         
 
     def getQuotaGuidByName(self, name: str):
-        return self.getQuotaByName(name)['guid']
+        return self.getQuotaByName(name)['metadata']['guid']
 
 
     def setQuota(self, orgGuid: str, quotaGuid:str):

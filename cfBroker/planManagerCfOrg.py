@@ -56,16 +56,21 @@ class PlanManagerCfOrg(ServiceBroker):
         return ProvisionedServiceSpec(dashboard_url=orgGuid)
 
 
+    def getOrgGuidByServiceInstanceId(self, instance_Id):
+        serviceInstance = self.cfClient.v2.service_instances._get('/v2/service_instances/{}'.format(instance_Id))
+        orgGuid = serviceInstance['entity']['dashboard_url']
+        # serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
+        # orgGuid = serviceInstance.get("dashboard_url")
+        return orgGuid
+
+
     def deprovision(self,
                     instance_id: str,
                     details: DeprovisionDetails,
                     async_allowed: bool,
                     **kwargs) -> DeprovisionServiceSpec:
                     
-        serviceInstance = self.cfClient.v2.service_instances.get(instance_id)
-        orgGuid = serviceInstance['entity']['dashboard_url']
-        # serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
-        # orgGuid = serviceInstance.get("dashboard_url")
+        orgGuid = self.getOrgGuidByServiceInstanceId(instance_id)
 
         # self.cfClient.v3.organizations.remove(orgGuid)
         # there are problems with v3 creating orgs see /issues/orgCreation.py folder.
@@ -87,8 +92,7 @@ class PlanManagerCfOrg(ServiceBroker):
                **kwargs
                ) -> UpdateServiceSpec:
 
-        serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
-        orgGuid = serviceInstance.get("dashboard_url")
+        orgGuid = self.getOrgGuidByServiceInstanceId(instance_id)
 
         # Change quota
         if 'quota' in details.parameters:
@@ -99,6 +103,7 @@ class PlanManagerCfOrg(ServiceBroker):
         # Change org name
         if 'name' in details.parameters:
             orgName = details.parameters.get('name')
-            self.cfClient.v3.organizations.update(orgGuid, orgName, suspended=True)
+            # self.cfClient.v3.organizations.update(orgGuid, orgName, suspended=True)
+            self.cfClient.v2.organizations._update(orgGuid, data={'name': orgName})
             
         return UpdateServiceSpec(False)
