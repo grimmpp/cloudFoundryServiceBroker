@@ -24,6 +24,18 @@ class CfClient(CloudFoundryClient):
         super().__init__(target_endpoint, proxy=proxy, verify=verifySslCert)
         self.init_with_user_credentials(username, password)
         print('Connection to Cloud Foundry is established!')
+        self.checkCfAPI()
+
+
+    def checkCfAPI(self):
+        url = self.appSettings['CF_API']['url'] + '/v2/info'
+        headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
+        response = self.requests.get(url, headers=headers, verify=False)
+        print(response.raise_for_status()) 
+        response = response.json()
+        print('Cloud Foundry API Versions: ({})'.format(url) )
+        print('* Cloud Controller API Version: {}'.format( response['api_version'] ) )
+        print('* Open Service Broker API Version: {}'.format( response['osbapi_version'] ) )
 
     # needs to be done for testing
     def getAccessToken(self):
@@ -38,7 +50,9 @@ class CfClient(CloudFoundryClient):
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self.getAccessToken()}
         # print("headers: "+ json.dumps(headers) )
-        response = self.requests.get(url, headers=headers, verify=False).json()
+        response = self.requests.get(url, headers=headers, verify=False)
+        print(response.raise_for_status()) 
+        response = response.json()
         # print( json.dumps( response ))
 
         for resource in response['resources']:
@@ -55,7 +69,10 @@ class CfClient(CloudFoundryClient):
         url = self.appSettings['CF_API']['url'] + '/v2/organizations/' + orgGuid
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self.getAccessToken()}
         data = '{"quota_definition_guid": "'+quotaGuid+'"}'
-        return self.requests.put(url, data, headers=headers, verify=False).json()
+        
+        self.requests.put(url, data, headers=headers, verify=False)
+        print(response.raise_for_status()) 
+        return response = response.json()
 
 
         
