@@ -49,6 +49,7 @@ class CfClient(CloudFoundryClient):
             return self._access_token
         except:
             return ''
+            
 
     def getQuotaByName(self, name: str) -> object:
         # url = self.getBaseUrl() + '/v3/organization_quotas' + '?names=' + name
