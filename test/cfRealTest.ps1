@@ -1,8 +1,11 @@
 
 # start or deploy cfBroker
 
+cf login -a https://api.dev.cfdev.sh --skip-ssl-validation -u admin -p admin -o cfdev-org -s cfdev-space
+
 # regisrter in cf
 cf create-service-broker cf-broker admin admin http://cf-broker.com:5000
+cf update-service-broker cf-broker admin admin http://cf-broker.com:5000
 cf enable-service-access "Cloud Foundry"
 
 # create service instance/org
