@@ -1,4 +1,3 @@
-
 from cloudfoundry_client.client import CloudFoundryClient
 import requests
 
@@ -7,6 +6,8 @@ import os
 
 from cfBroker.applicationSettings import ApplicationSettings
 
+# https://github.com/cloudfoundry-community/cf-python-client
+
 class CfClient(CloudFoundryClient):
     
     def __init__(self, appSettings: ApplicationSettings):
@@ -14,8 +15,12 @@ class CfClient(CloudFoundryClient):
         self.appSettings = appSettings
 
 
+    def getBaseUrl(self):
+        return self.appSettings['CF_API']['url']
+
+
     def connect(self):
-        target_endpoint = self.appSettings['CF_API']['url']
+        target_endpoint = self.getBaseUrl()
         username = self.appSettings['CF_API']['username']
         password = self.appSettings['CF_API']['password']
         proxy = dict(http=self.appSettings['CF_API']['HTTP_PROXY'], https=self.appSettings['CF_API']['HTTPS_PROXY'])
@@ -28,7 +33,7 @@ class CfClient(CloudFoundryClient):
 
 
     def checkCfAPI(self):
-        url = self.appSettings['CF_API']['url'] + '/v2/info'
+        url = self.getBaseUrl() + '/v2/info'
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
         response = self.requests.get(url, headers=headers, verify=False)
         print(response.raise_for_status()) 
@@ -37,6 +42,7 @@ class CfClient(CloudFoundryClient):
         print('* Cloud Controller API Version: {}'.format( response['api_version'] ) )
         print('* Open Service Broker API Version: {}'.format( response['osbapi_version'] ) )
 
+
     # needs to be done for testing
     def getAccessToken(self):
         try:
@@ -44,8 +50,9 @@ class CfClient(CloudFoundryClient):
         except:
             return ''
 
+
     def getQuotaByName(self, name: str) -> object:
-        url = self.appSettings['CF_API']['url'] + '/v3/organization_quotas' + '?names=' + name
+        url = self.getBaseUrl() + '/v3/organization_quotas' + '?names=' + name
         # print("requested path: "+url)
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self.getAccessToken()}
@@ -66,13 +73,13 @@ class CfClient(CloudFoundryClient):
 
 
     def setQuota(self, orgGuid: str, quotaGuid:str):
-        url = self.appSettings['CF_API']['url'] + '/v2/organizations/' + orgGuid
+        url = self.getBaseUrl() + '/v2/organizations/' + orgGuid
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'Authorization': 'bearer '+self.getAccessToken()}
         data = '{"quota_definition_guid": "'+quotaGuid+'"}'
         
-        self.requests.put(url, data, headers=headers, verify=False)
+        response = self.requests.put(url, data, headers=headers, verify=False)
         print(response.raise_for_status()) 
-        return response = response.json()
+        return response.json()
 
 
         

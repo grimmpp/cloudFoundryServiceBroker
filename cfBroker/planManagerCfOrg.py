@@ -1,5 +1,7 @@
-
 from typing import Union, List
+import sys, json
+
+from cfBroker.cfClient import CfClient
 
 import openbrokerapi
 from openbrokerapi.api import ServiceBroker
@@ -18,7 +20,7 @@ class PlanManagerCfOrg(ServiceBroker):
     
     PLAN_ID = '29dcc9ea-629c-4307-b0fb-a0f6c047e788'
 
-    def __init__(self, cfClient):
+    def __init__(self, cfClient: CfClient):
         self.cfClient = cfClient
 
 
@@ -44,7 +46,10 @@ class PlanManagerCfOrg(ServiceBroker):
         if not ('name' in details.parameters):
             raise Exception("No parameter name is given.")
 
-        orgGuid = self.cfClient.v3.organizations.create(details.parameters['name'], suspended=False).get('guid')
+        response = self.cfClient.v2.organizations._create(data = {'name': details.parameters['name']})
+        orgGuid = response['metadata']['guid']
+        # org creation is also done via v2 api in cf cli.
+        # there are problems with v3 creating orgs see /issues/orgCreation.py folder.
 
 # ---> small hack: reference to org (org Guid) is stored in dashboard_url field of service instance.
 # can be put in open service broker v2.16 through metadata field
@@ -57,10 +62,20 @@ class PlanManagerCfOrg(ServiceBroker):
                     async_allowed: bool,
                     **kwargs) -> DeprovisionServiceSpec:
                     
-        serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
-        orgGuid = serviceInstance.get("dashboard_url")
+        serviceInstance = self.cfClient.v2.service_instances.get(instance_id)
+        orgGuid = serviceInstance['entity']['dashboard_url']
+        # serviceInstance = self.cfClient.v3.service_instances.get(instance_id)
+        # orgGuid = serviceInstance.get("dashboard_url")
 
-        self.cfClient.v3.organizations.remove(orgGuid)
+        # self.cfClient.v3.organizations.remove(orgGuid)
+        # there are problems with v3 creating orgs see /issues/orgCreation.py folder.
+        url = "{}/v2/organizations/{}?async=false&recursive=true".format(self.cfClient.getBaseUrl(), orgGuid)
+        try:
+            self.cfClient.v2.organizations._delete(url)
+        except Exception as e:
+            # delete service instance also if org was manually deleted in advance
+            if "The organization could not be found:" not in str(e): raise e
+            
 
         return DeprovisionServiceSpec(is_async=False)
 
