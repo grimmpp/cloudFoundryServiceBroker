@@ -4,9 +4,9 @@ applications:
   - https://github.com/cloudfoundry/python-buildpack.git
   disk_quota: 1G
   instances: 1
-  memory: 256M
+  memory: 512M
   routes:
   - route: cf-broker.dev.cfdev.sh
 #  random-route: true
   stack: cflinuxfs3
-  command: python main.py
+  command: python setup.py develop && cd cfBroker && python main.py
