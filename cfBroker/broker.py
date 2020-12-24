@@ -16,9 +16,9 @@ from openbrokerapi.service_broker import (
 import json
 import logging
 
-from cfBroker.cfClient import CfClient
-from cfBroker.applicationSettings import ApplicationSettings
-from cfBroker.planManagerCfOrg import PlanManagerCfOrg
+from cfClient import CfClient
+from applicationSettings import ApplicationSettings
+from planManagerCfOrg import PlanManagerCfOrg
 
 class Broker(ServiceBroker):
 

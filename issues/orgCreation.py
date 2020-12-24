@@ -1,5 +1,5 @@
-from cfBroker.cfClient import CfClient
-from cfBroker.applicationSettings import ApplicationSettings
+from cfClient import CfClient
+from applicationSettings import ApplicationSettings
 import json
 
 appSettings = ApplicationSettings()

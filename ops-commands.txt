@@ -10,6 +10,9 @@ https://stackoverflow.com/questions/1896918/running-unittest-with-typical-test-d
 python setup.py develop
 python -m unittest discover -v
 
+### create delivery
+python3 setup.py sdist bdist_wheel
+
 
 
 ### create service broker

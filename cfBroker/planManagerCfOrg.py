@@ -1,7 +1,7 @@
 from typing import Union, List
 import sys, json
 
-from cfBroker.cfClient import CfClient
+from cfClient import CfClient
 
 import openbrokerapi
 from openbrokerapi.api import ServiceBroker

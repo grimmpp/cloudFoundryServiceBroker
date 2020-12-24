@@ -4,7 +4,7 @@ import requests
 import json
 import os
 
-from cfBroker.applicationSettings import ApplicationSettings
+from applicationSettings import ApplicationSettings
 
 # https://github.com/cloudfoundry-community/cf-python-client
 

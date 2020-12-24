@@ -9,4 +9,4 @@ applications:
   - route: cf-broker.dev.cfdev.sh
 #  random-route: true
   stack: cflinuxfs3
-  command: python setup.py develop && cd cfBroker && python main.py
+  command: python main.py

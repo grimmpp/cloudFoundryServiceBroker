@@ -2,7 +2,6 @@
     "python.pythonPath": "C:\\Python38\\python.exe",
     "python.autoComplete.extraPaths": [
         "C:\\Python38\\Lib",
-        "C:\\Python38\\Lib\\site-packages",
-        "C:\\Users\\User\\Documents\\Projects\\cf-broker",
+        "C:\\Python38\\Lib\\site-packages"
     ]
 }

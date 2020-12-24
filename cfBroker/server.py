@@ -2,9 +2,9 @@ import logging
 
 from flask import Flask
 
-from cfBroker.broker import Broker
-from cfBroker.cfClient import CfClient
-from cfBroker.applicationSettings import ApplicationSettings
+from broker import Broker
+from cfClient import CfClient
+from applicationSettings import ApplicationSettings
 
 from openbrokerapi import api
 
