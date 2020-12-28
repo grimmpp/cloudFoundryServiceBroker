@@ -14,10 +14,10 @@ class ApplicationSettings(dict):
         self.setSetting('Broker_API', 'port', 'port', 8080)
         self.setSetting('Broker_API', 'usermane', 'broker_username')
         self.setSetting('Broker_API', 'password', 'broker_password')
-        self.setSetting('CF_API', 'url', 'cf_api_url')
-        self.setSetting('CF_API', 'username', 'cf_api_username')
-        self.setSetting('CF_API', 'password', 'cf_api_password')
-        self.setSetting('CF_API', 'skip-ssl-validation', 'cf_api_skip_ssl_validation', False)
+        self.setSetting('CF_Client', 'url', 'cf_client_url')
+        self.setSetting('CF_Client', 'username', 'cf_client_username')
+        self.setSetting('CF_Client', 'password', 'cf_client_password')
+        self.setSetting('CF_Client', 'skip-ssl-validation', 'cf_api_skip_ssl_validation', False)
         
         # print( json.dumps(self))
 

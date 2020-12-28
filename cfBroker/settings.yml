@@ -1,10 +1,15 @@
-CF_API:
+CF_Client:
   url: https://api.dev.cfdev.sh
   username: admin
   password: admin
   skip-ssl-validation: true
   HTTP_PROXY:
   HTTPS_PROXY:
+
+UUA_Client:
+  baseUrl:
+  clientId:
+  clientSecret:
 
 Broker_API:
   port: 5000

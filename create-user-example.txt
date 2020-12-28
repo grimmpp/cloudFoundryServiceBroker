@@ -1,0 +1,279 @@
+PS C:\Users\User> cf create-user test test
+REQUEST: [2020-12-24T15:02:33+01:00]
+GET /v2/info HTTP/1.1
+Host: api.dev.cfdev.sh
+Accept: application/json
+User-Agent: cf.exe/6.49.0+d0dfa93bb.2020-01-07 (go1.13.4; amd64 windows)
+
+RESPONSE: [2020-12-24T15:02:33+01:00]
+HTTP/1.1 200 OK
+Content-Length: 678
+Content-Type: application/json;charset=utf-8
+Date: Thu, 24 Dec 2020 14:02:33 GMT
+Server: nginx
+X-Content-Type-Options: nosniff
+X-Vcap-Request-Id: 8441adcb-5715-4408-537a-68cf37f64138::59b25887-7e75-4e81-a280-ff12330e4b52
+{
+  "api_version": "2.131.0",
+  "app_ssh_endpoint": "ssh.dev.cfdev.sh:2222",
+  "app_ssh_host_key_fingerprint": "e7:71:85:55:ec:10:59:c9:15:14:1b:b9:04:23:d4:44",
+  "app_ssh_oauth_client": "ssh-proxy",
+  "authorization_endpoint": "https://login.dev.cfdev.sh",
+  "build": "2.5.7-build.3",
+  "description": "https://docs.pivotal.io/pivotalcf/2-5/pcf-release-notes/runtime-rn.html",
+  "doppler_logging_endpoint": "wss://doppler.dev.cfdev.sh:443",
+  "min_cli_version": "6.23.0",
+  "min_recommended_cli_version": "6.23.0",
+  "name": "Small Footprint PAS",
+  "osbapi_version": "2.14",
+  "routing_endpoint": "https://api.dev.cfdev.sh/routing",
+  "support": "https://support.pivotal.io",
+  "token_endpoint": "[PRIVATE DATA HIDDEN]",
+  "version": 0
+}
+
+
+REQUEST: [2020-12-24T15:02:33+01:00]
+GET /login HTTP/1.1
+Host: login.dev.cfdev.sh
+Accept: application/json
+Connection: close
+User-Agent: cf.exe/6.49.0+d0dfa93bb.2020-01-07 (go1.13.4; amd64 windows)
+
+RESPONSE: [2020-12-24T15:02:33+01:00]
+HTTP/1.1 200 OK
+Cache-Control: no-store
+Content-Language: en-US
+Content-Length: 378
+Content-Type: application/json;charset=UTF-8
+Date: Thu, 24 Dec 2020 14:02:33 GMT
+Set-Cookie: X-Uaa-Csrf=i6bh3OEcf433tlUbLqVlBY; Max-Age=86400; Expires=Fri, 25-Dec-2020 14:02:33 GMT; Path=/; Secure; HttpOnly
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Vcap-Request-Id: a5456dfa-35bb-4ce9-7b63-8dd68c6c447f
+X-Xss-Protection: 1; mode=block
+{
+  "app": {
+    "version": "4.29.0"
+  },
+  "commit_id": "97061cd",
+  "entityID": "http://login.dev.cfdev.sh",
+  "idpDefinitions": {},
+  "links": {
+    "login": "https://login.dev.cfdev.sh",
+    "passwd": "/forgot_password",
+    "register": "/create_account",
+    "uaa": "https://uaa.dev.cfdev.sh"
+  },
+  "prompts": {
+    "password": "[PRIVATE DATA HIDDEN]",
+    "username": [
+      "text",
+      "Email"
+    ]
+  },
+  "timestamp": "2019-06-25T20:45:22+0000",
+  "zone_name": "uaa"
+}
+
+
+Creating user test...
+REQUEST: [2020-12-24T15:02:33+01:00]
+POST /Users HTTP/1.1
+Host: uaa.dev.cfdev.sh
+Accept: application/json
+Authorization: [PRIVATE DATA HIDDEN]
+Connection: close
+Content-Type: application/json
+User-Agent: cf.exe/6.49.0+d0dfa93bb.2020-01-07 (go1.13.4; amd64 windows)
+{
+  "emails": [
+    {
+      "primary": true,
+      "value": "test"
+    }
+  ],
+  "name": {
+    "familyName": "test",
+    "givenName": "test"
+  },
+  "origin": "",
+  "password": "[PRIVATE DATA HIDDEN]",
+  "userName": "test"
+}
+
+
+RESPONSE: [2020-12-24T15:02:33+01:00]
+HTTP/1.1 201 Created
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Content-Length: 2040
+Content-Type: application/json;charset=UTF-8
+Date: Thu, 24 Dec 2020 14:02:33 GMT
+Etag: "0"
+Expires: 0
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Vcap-Request-Id: 6235de89-8298-46dc-63f9-db46dc5a737d
+X-Xss-Protection: 1; mode=block
+{
+  "active": true,
+  "approvals": null,
+  "emails": [
+    {
+      "primary": false,
+      "value": "test"
+    }
+  ],
+  "groups": [
+    {
+      "display": "openid",
+      "type": "DIRECT",
+      "value": "0abd58a3-0c2d-4ec2-bd34-ddc05f458a81"
+    },
+    {
+      "display": "approvals.me",
+      "type": "DIRECT",
+      "value": "acdb6369-4dec-4f25-9807-496656505890"
+    },
+    {
+      "display": "scim.me",
+      "type": "DIRECT",
+      "value": "63b04d01-efb5-4465-8783-90fc031e6441"
+    },
+    {
+      "display": "profile",
+      "type": "DIRECT",
+      "value": "85cac275-ff80-4990-8e25-965cddfaedb9"
+    },
+    {
+      "display": "uaa.offline_token",
+      "type": "DIRECT",
+      "value": "acf59e79-e2e6-49dd-ab5d-2a42a965333c"
+    },
+    {
+      "display": "cloud_controller.read",
+      "type": "DIRECT",
+      "value": "3f3029b5-27d9-4ce5-8975-b3097c04f25d"
+    },
+    {
+      "display": "notification_preferences.read",
+      "type": "DIRECT",
+      "value": "09bae157-36f6-483d-90b4-01e5b5f7899c"
+    },
+    {
+      "display": "cloud_controller.write",
+      "type": "DIRECT",
+      "value": "93386c4d-0cc0-4e34-b4d3-f1f4fabf6eaa"
+    },
+    {
+      "display": "notification_preferences.write",
+      "type": "DIRECT",
+      "value": "ed5882c0-f6f5-4439-b775-2440e80f9105"
+    },
+    {
+      "display": "actuator.read",
+      "type": "DIRECT",
+      "value": "c091c1b9-b795-4c5b-a7c1-de72c7c4e8e9"
+    },
+    {
+      "display": "cloud_controller.user",
+      "type": "DIRECT",
+      "value": "9776f65f-066a-4226-9f89-737d0ae5ef5b"
+    },
+    {
+      "display": "user_attributes",
+      "type": "DIRECT",
+      "value": "f066b56e-66fa-4bb5-a825-d8c95a096cf0"
+    },
+    {
+      "display": "uaa.user",
+      "type": "DIRECT",
+      "value": "0eab94ed-b91c-4349-8e02-dca1e207f9a9"
+    },
+    {
+      "display": "roles",
+      "type": "DIRECT",
+      "value": "5bdcc01c-d797-463c-8f20-af0ea9a5f75b"
+    },
+    {
+      "display": "password.write",
+      "type": "DIRECT",
+      "value": "951e3590-6696-4294-8c65-aa43af5420bb"
+    },
+    {
+      "display": "oauth.approvals",
+      "type": "DIRECT",
+      "value": "a5fbcfc9-fe3f-467f-815b-c369b2620403"
+    },
+    {
+      "display": "cloud_controller_service_permissions.read",
+      "type": "DIRECT",
+      "value": "604eecd2-ddfd-4da1-890d-35ec6392dec1"
+    }
+  ],
+  "id": "70a02a80-fe46-440c-86e8-9888c393de52",
+  "meta": {
+    "created": "2020-12-24T14:02:34.000Z",
+    "lastModified": "2020-12-24T14:02:34.000Z",
+    "version": 0
+  },
+  "name": {
+    "familyName": "test",
+    "givenName": "test"
+  },
+  "origin": "uaa",
+  "passwordLastModified": "[PRIVATE DATA HIDDEN]",
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "userName": "test",
+  "verified": true,
+  "zoneId": "uaa"
+}
+
+
+REQUEST: [2020-12-24T15:02:33+01:00]
+POST /v2/users HTTP/1.1
+Host: api.dev.cfdev.sh
+Accept: application/json
+Authorization: [PRIVATE DATA HIDDEN]
+Content-Type: application/json
+User-Agent: cf.exe/6.49.0+d0dfa93bb.2020-01-07 (go1.13.4; amd64 windows)
+{
+  "guid": "70a02a80-fe46-440c-86e8-9888c393de52"
+}
+
+
+RESPONSE: [2020-12-24T15:02:33+01:00]
+HTTP/1.1 201 Created
+Content-Length: 1011
+Content-Type: application/json;charset=utf-8
+Date: Thu, 24 Dec 2020 14:02:33 GMT
+Location: /v2/users/70a02a80-fe46-440c-86e8-9888c393de52
+Server: nginx
+X-Content-Type-Options: nosniff
+X-Vcap-Request-Id: 445d7c5b-6a57-475f-5b72-fe85ea83dbef::296639c6-b256-47aa-8df4-9d932531e2db
+{
+  "entity": {
+    "active": false,
+    "admin": false,
+    "audited_organizations_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/audited_organizations",
+    "audited_spaces_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/audited_spaces",
+    "billing_managed_organizations_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/billing_managed_organizations",
+    "default_space_guid": null,
+    "managed_organizations_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/managed_organizations",
+    "managed_spaces_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/managed_spaces",
+    "organizations_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/organizations",
+    "spaces_url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52/spaces",
+    "username": "test"
+  },
+  "metadata": {
+    "created_at": "2020-12-24T14:02:33Z",
+    "guid": "70a02a80-fe46-440c-86e8-9888c393de52",
+    "updated_at": "2020-12-24T14:02:33Z",
+    "url": "/v2/users/70a02a80-fe46-440c-86e8-9888c393de52"
+  }
+}

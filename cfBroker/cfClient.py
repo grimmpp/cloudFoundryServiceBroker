@@ -16,15 +16,15 @@ class CfClient(CloudFoundryClient):
 
 
     def getBaseUrl(self):
-        return self.appSettings['CF_API']['url']
+        return self.appSettings['CF_Client']['url']
 
 
     def connect(self):
         target_endpoint = self.getBaseUrl()
-        username = self.appSettings['CF_API']['username']
-        password = self.appSettings['CF_API']['password']
-        proxy = dict(http=self.appSettings['CF_API']['HTTP_PROXY'], https=self.appSettings['CF_API']['HTTPS_PROXY'])
-        verifySslCert = not self.appSettings['CF_API']['skip-ssl-validation']
+        username = self.appSettings['CF_Client']['username']
+        password = self.appSettings['CF_Client']['password']
+        proxy = dict(http=self.appSettings['CF_Client']['HTTP_PROXY'], https=self.appSettings['CF_Client']['HTTPS_PROXY'])
+        verifySslCert = not self.appSettings['CF_Client']['skip-ssl-validation']
 
         super().__init__(target_endpoint, proxy=proxy, verify=verifySslCert)
         self.init_with_user_credentials(username, password)

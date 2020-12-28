@@ -20,6 +20,8 @@ from cfClient import CfClient
 from applicationSettings import ApplicationSettings
 from planManagerCfOrg import PlanManagerCfOrg
 
+# Service Broker API Spec.: https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#catalog-management
+
 class Broker(ServiceBroker):
 
     def __init__(self, appSettings: ApplicationSettings, cfClient: CfClient):
