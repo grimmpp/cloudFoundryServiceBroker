@@ -19,7 +19,7 @@ class CfClient(CloudFoundryClient):
         return self.appSettings['CF_Client']['url']
 
 
-    def getUAABaseUrl(self):
+    def getUaaBaseUrl(self):
         return self.appSettings['CF_API_Info']['token_endpoint']
 
 
@@ -49,7 +49,7 @@ class CfClient(CloudFoundryClient):
         response = response.json()
         self.appSettings['CF_API_Info'] = response
         
-        print('UAA Base Url: {}'.format(self.getUAABaseUrl()))
+        print('UAA Base Url: {}'.format(self.getUaaBaseUrl()))
 
         print('Cloud Foundry API Versions: ({})'.format(url) )
         print('* Cloud Controller API Version: {}'.format( response['api_version'] ) )
@@ -96,8 +96,8 @@ class CfClient(CloudFoundryClient):
         return response.json()
 
 
-    def createUser(self, username, password):
-        url = "{}/{}".format( self.getUAABaseUrl(), "Users" )
+    def createUser(self, username, password, createAdminUser:bool=False):
+        url = "{}/{}".format( self.getUaaBaseUrl(), "Users" )
         headers = self.getDefaultHeaders()
         data = '{{"emails": [{{ "primary": true, "value": "{user}"}}], "name": {{"familyName": "{user}", "givenName": "{user}"}}, "origin": "", "password": "{pwd}", "userName": "{user}"}}'.format(user=username, pwd=password)
 
@@ -116,13 +116,40 @@ class CfClient(CloudFoundryClient):
         cfUser = response.json()
         if (not response.ok and not ('The UAA ID is taken' in cfUser['description'])): response.raise_for_status()
 
+        if createAdminUser: self.addUserToAllAdminGroups(userId)
+
         print("\nuser was created\n")
         # print(cfUser)
         return cfUser
 
 
+    def getUaaGroupByName(self, groupName: str):
+        url = "{}/Groups?filter=displayName+Eq+%22{}%22".format(self.getUaaBaseUrl(), groupName)
+        headers = self.getDefaultHeaders()
+        response = self.requests.get(url, headers=headers, verify=self.verifySslCert)
+        response.raise_for_status()
+        return response.json()['resources'][0]
+
+
+    adminGroups = ["cloud_controller.admin", "uaa.admin", "scim.read", "scim.write"]
+    def addUserToAllAdminGroups(self, userId):
+        for adminGrpName in self.adminGroups:
+            grpId = self.getUaaGroupByName(adminGrpName)['id']
+            self.addUserToAdminGroup(userId, grpId)
+
+
+    def addUserToAdminGroup(self, userId, groupId):
+        url = "{}/Groups/{}/members".format(self.getUaaBaseUrl(), groupId)
+        headers = self.getDefaultHeaders()
+        data = '{{"origin": "uaa", "type": "USER", "value": "{}" }}'.format(userId)
+        response = self.requests.post(url, data, headers=headers, verify=self.verifySslCert)
+        # skip if membership already exists
+        if (not response.ok and response.status_code != 409): response.raise_for_status()
+        return response.json()
+
+
     def getUserByUsername(self, username):
-        url = "{}/Users?attributes=id,userName&filter=userName+Eq+%22{}%22".format( self.getUAABaseUrl(), username )
+        url = "{}/Users?attributes=id,userName&filter=userName+Eq+%22{}%22".format( self.getUaaBaseUrl(), username )
         headers = self.getDefaultHeaders()
 
         response = self.requests.get(url, headers=headers, verify=self.verifySslCert)
@@ -143,7 +170,7 @@ class CfClient(CloudFoundryClient):
         if not response.ok and response.status_code != 404: response.raise_for_status()
         
         # delete user in uaa
-        url = "{}/Users/{}".format(self.getUAABaseUrl(), userId)
+        url = "{}/Users/{}".format(self.getUaaBaseUrl(), userId)
         response = self.requests.delete(url, headers=headers, verify=self.verifySslCert)
         response.raise_for_status()
         uaaConfirmation = response.json()
