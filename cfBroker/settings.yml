@@ -6,11 +6,6 @@ CF_Client:
   HTTP_PROXY:
   HTTPS_PROXY:
 
-UUA_Client:
-  baseUrl:
-  clientId:
-  clientSecret:
-
 Broker_API:
   port: 5000
   username: admin
