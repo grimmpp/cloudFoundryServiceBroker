@@ -1,0 +1,84 @@
+PS C:\Windows\System32\drivers\etc> cf delete-user test
+
+Really delete the user test?> yes
+Deleting user test as admin...
+
+REQUEST: [2020-12-29T17:53:56+01:00]
+GET /Users?attributes=id,userName&filter=userName+Eq+%22test%22 HTTP/1.1
+Host: uaa.dev.cfdev.sh
+Accept: application/json
+Authorization: [PRIVATE DATA HIDDEN]
+Content-Type: application/json
+User-Agent: go-cli 6.49.0+d0dfa93bb.2020-01-07 / windows
+
+
+RESPONSE: [2020-12-29T17:53:56+01:00]
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 170
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Content-Type: application/json;charset=UTF-8
+Date: Tue, 29 Dec 2020 16:53:56 GMT
+Expires: 0
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Vcap-Request-Id: 227f8888-38aa-44f7-6006-d69db685bed3
+X-Xss-Protection: 1; mode=block
+
+{"resources":[{"id":"40cbebc4-d6e3-4ebd-aa38-c8edfa2aa890","userName":"test"}],"startIndex":1,"itemsPerPage":100,"totalResults":1,"schemas":["urn:scim:schemas:core:1.0"]}
+
+REQUEST: [2020-12-29T17:53:56+01:00]
+DELETE /v2/users/40cbebc4-d6e3-4ebd-aa38-c8edfa2aa890?async=true HTTP/1.1
+Host: api.dev.cfdev.sh
+Accept: application/json
+Authorization: [PRIVATE DATA HIDDEN]
+Content-Type: application/json
+User-Agent: go-cli 6.49.0+d0dfa93bb.2020-01-07 / windows
+
+
+RESPONSE: [2020-12-29T17:53:57+01:00]
+HTTP/1.1 404 Not Found
+Connection: close
+Content-Length: 141
+Content-Type: application/json;charset=utf-8
+Date: Tue, 29 Dec 2020 16:53:57 GMT
+Server: nginx
+X-Content-Type-Options: nosniff
+X-Vcap-Request-Id: 664f7a05-346d-495f-6d7a-1beff7892183::5f48c5d8-0d94-42a8-8e73-b3931815eda8
+
+{
+  "description": "The user could not be found: 40cbebc4-d6e3-4ebd-aa38-c8edfa2aa890",
+  "error_code": "CF-UserNotFound",
+  "code": 20003
+}
+
+
+REQUEST: [2020-12-29T17:53:57+01:00]
+DELETE /Users/40cbebc4-d6e3-4ebd-aa38-c8edfa2aa890 HTTP/1.1
+Host: uaa.dev.cfdev.sh
+Accept: application/json
+Authorization: [PRIVATE DATA HIDDEN]
+Content-Type: application/json
+User-Agent: go-cli 6.49.0+d0dfa93bb.2020-01-07 / windows
+
+
+RESPONSE: [2020-12-29T17:53:57+01:00]
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 2040
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Content-Type: application/json;charset=UTF-8
+Date: Tue, 29 Dec 2020 16:53:57 GMT
+Etag: "0"
+Expires: 0
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Vcap-Request-Id: 41952975-518b-4431-7cb5-4e268a63f10c
+X-Xss-Protection: 1; mode=block
+
+{"id":"40cbebc4-d6e3-4ebd-aa38-c8edfa2aa890","meta":{"version":0,"created":"2020-12-29T16:17:53.000Z","lastModified":"2020-12-29T16:17:53.000Z"},"userName":"test","name":{"familyName":"test","givenName":"test"},"emails":[{"value":"test","primary":false}],"groups":[{"value":"65becb2e-e2a8-4418-aa1e-53b4a1d40570","display":"oauth.approvals","type":"DIRECT"},{"value":"12d3280d-bfc3-4f8e-b99b-cb5454d1e680","display":"uaa.offline_token","type":"DIRECT"},{"value":"a273ceab-7568-4872-8447-34793b1acf63","display":"cloud_controller.user","type":"DIRECT"},{"value":"c8a8d909-8d9b-43dc-8953-ec50cc3ae8d8","display":"cloud_controller_service_permissions.read","type":"DIRECT"},{"value":"a0c3a74b-2294-4f20-97a2-cd33907dacd9","display":"password.write","type":"DIRECT"},{"value":"9eab7b9b-0e32-4c72-8cd9-10d8bd18556b","display":"roles","type":"DIRECT"},{"value":"68d2da8c-cfea-4375-8d66-d116b5585ca7","display":"actuator.read","type":"DIRECT"},{"value":"e0bd407a-1b27-434e-b94f-588fc48d5f0c","display":"uaa.user","type":"DIRECT"},{"value":"878fe509-9d30-4c4f-8b62-bc591ea98649","display":"user_attributes","type":"DIRECT"},{"value":"31278e86-1484-4ca0-8cd4-90892afe03c7","display":"cloud_controller.write","type":"DIRECT"},{"value":"9ec39feb-1f53-4c7d-afcb-a74e386fb07d","display":"notification_preferences.read","type":"DIRECT"},{"value":"ac36a251-aee8-440c-adfc-933e9e3f5367","display":"approvals.me","type":"DIRECT"},{"value":"e30fd8c2-d066-446a-ab3e-641609684ac2","display":"notification_preferences.write","type":"DIRECT"},{"value":"02f60e1c-5093-47cb-b470-088264978a9f","display":"openid","type":"DIRECT"},{"value":"4d039586-cc6d-4ffc-8040-103467504a37","display":"profile","type":"DIRECT"},{"value":"ae9dc593-bdfc-4a13-8f26-c1d45df62667","display":"scim.me","type":"DIRECT"},{"value":"9385e884-e431-4df1-ab5e-010fd2b83b90","display":"cloud_controller.read","type":"DIRECT"}],"approvals":[],"active":true,"verified":true,"origin":"uaa","zoneId":"uaa","passwordLastModified":"[PRIVATE DATA HIDDEN]","schemas":["urn:scim:schemas:core:1.0"]}
+OK
