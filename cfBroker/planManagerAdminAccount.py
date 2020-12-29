@@ -2,6 +2,8 @@ from typing import Union, List
 
 from cfClient import CfClient
 
+import uuid
+
 import openbrokerapi
 from openbrokerapi.api import ServiceBroker
 from openbrokerapi.catalog import ServicePlan
@@ -19,15 +21,21 @@ from openbrokerapi.service_broker import (
     UnbindSpec
 )
 
-class PlanManagerCfOrg(ServiceBroker):
+class PlanManagerAdminAccount(ServiceBroker):
     
     PLAN_ID = '3454f984-cc25-4d0c-90ad-967faaf7117d'
+
 
     def __init__(self, cfClient):
         self.cfClient = cfClient
 
+
     def getPlanId(self) -> str:
         return self.PLAN_ID
+
+
+    def getUsername(self, instanceId: str):
+        return "cf-admin-"+instanceId
 
 
     def getServicePlan(self) -> ServicePlan:
@@ -38,19 +46,23 @@ class PlanManagerCfOrg(ServiceBroker):
             bindable=True
         )
 
+
     def provision(self,
                 instance_id: str,
                 details: ProvisionDetails,
                 async_allowed: bool,
                 **kwargs) -> ProvisionedServiceSpec:
-        pass
+        print("test")
+        return ProvisionedServiceSpec()
+
 
     def deprovision(self,
                     instance_id: str,
                     details: DeprovisionDetails,
                     async_allowed: bool,
                     **kwargs) -> DeprovisionServiceSpec:
-        pass
+        return DeprovisionServiceSpec(is_async=False)
+
 
     def update(self,
                instance_id: str,
@@ -60,6 +72,7 @@ class PlanManagerCfOrg(ServiceBroker):
                ) -> UpdateServiceSpec:
         pass
 
+
     def bind(self,
              instance_id: str,
              binding_id: str,
@@ -67,10 +80,11 @@ class PlanManagerCfOrg(ServiceBroker):
              async_allowed: bool,
              **kwargs
              ) -> Binding:
-        #TODO: create account
+        username = self.getUsername(instance_id)
+        password = uuid.uuid4()
+        self.cfClient.createUser(username, password, createAdminUser=True)
+        return Binding(credentials = {"username": username, "password": password, "url": self.cfClient.getBaseUrl()})
 
-        
-        pass
 
     def unbind(self,
                instance_id: str,
@@ -79,5 +93,6 @@ class PlanManagerCfOrg(ServiceBroker):
                async_allowed: bool,
                **kwargs
                ) -> UnbindSpec:
-        #TODO: delete account
-        pass
+        username = self.getUsername(instance_id)
+        self.cfClient.deleteUser(username)
+        return UnbindSpec(is_async=False)

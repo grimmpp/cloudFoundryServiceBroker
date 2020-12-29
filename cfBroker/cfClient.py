@@ -45,7 +45,7 @@ class CfClient(CloudFoundryClient):
         url = self.getBaseUrl() + '/v2/info'
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
         response = self.requests.get(url, headers=headers, verify=self.verifySslCert)
-        print(response.raise_for_status()) 
+        response.raise_for_status()
         response = response.json()
         self.appSettings['CF_API_Info'] = response
         
@@ -118,7 +118,6 @@ class CfClient(CloudFoundryClient):
 
         if createAdminUser: self.addUserToAllAdminGroups(userId)
 
-        print("\nuser was created\n")
         # print(cfUser)
         return cfUser
 
@@ -175,6 +174,5 @@ class CfClient(CloudFoundryClient):
         response.raise_for_status()
         uaaConfirmation = response.json()
 
-        print("\nuser was deleted\n")
 
 
