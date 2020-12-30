@@ -16,6 +16,14 @@ class CfClient(CloudFoundryClient):
         self.requests = requests
         self.appSettings = appSettings
         self.logger = getLogger(self.appSettings)
+        
+        # enable debug https requests logs
+        if self.appSettings['logging']['debug-http-requests']:
+            import http.client as http_client
+            http_client.HTTPConnection.debuglevel = 1
+            requests_log = logging.getLogger("requests.packages.urllib3")
+            requests_log.setLevel(logging.DEBUG)
+            requests_log.propagate = True
 
 
     def getBaseUrl(self):
@@ -39,6 +47,12 @@ class CfClient(CloudFoundryClient):
         self.verifySslCert = not self.appSettings['CF_Client']['skip-ssl-validation']
 
         super().__init__(target_endpoint, proxy=proxy, verify=self.verifySslCert)
+        self.logger.debug("Connect to {}, user: {}, proxy: {}, verifySslCert: {} ".format(
+            target_endpoint, 
+            username,
+            json.dumps(proxy),
+            self.verifySslCert))
+
         self.init_with_user_credentials(username, password)
         self.logger.info('Connection to Cloud Foundry is established!')
         self.checkCfAPI()

@@ -1,5 +1,6 @@
 logging:
   level: INFO
+  debug-http-requests: false
 
 CF_Client:
   url: https://api.dev.cfdev.sh

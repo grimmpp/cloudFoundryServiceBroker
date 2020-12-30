@@ -24,6 +24,8 @@ class ApplicationSettings(dict):
         self.setSetting('CF_Client', 'password', 'cf_client_password')
         self.setSetting('CF_Client', 'skip-ssl-validation', 'cf_api_skip_ssl_validation', False)
         self.setSetting('logging', 'level', 'logLevel', 'INFO')
+        self.setSetting('logging', 'debug-http-requests', 'debug-http-requests', False)
+        
         
         self.logger.info("Settings are loaded.")
 
