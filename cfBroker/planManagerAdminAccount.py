@@ -1,6 +1,7 @@
 from typing import Union, List
 
 from cfClient import CfClient
+from logger import getLogger
 
 import uuid
 
@@ -28,6 +29,7 @@ class PlanManagerAdminAccount(ServiceBroker):
 
     def __init__(self, cfClient):
         self.cfClient = cfClient
+        self.logger = getLogger(cfClient.appSettings)
 
 
     def getPlanId(self) -> str:
@@ -82,6 +84,7 @@ class PlanManagerAdminAccount(ServiceBroker):
         username = self.getUsername(instance_id)
         password = uuid.uuid4()
         self.cfClient.createUser(username, password, createAdminUser=True)
+        self.logger.info("Created CF Admin User: {} for InstanceId: {} and BindingId: {}".format(username, instance_id, binding_id))
         return Binding(credentials = {"username": username, "password": password, "url": self.cfClient.getBaseUrl()})
 
 
@@ -94,4 +97,5 @@ class PlanManagerAdminAccount(ServiceBroker):
                ) -> UnbindSpec:
         username = self.getUsername(instance_id)
         self.cfClient.deleteUser(username)
+        self.logger.info("Deleted CF Admin User: {} for InstanceId: {} and BindingId: {}".format(username, instance_id, binding_id))
         return UnbindSpec(is_async=False)

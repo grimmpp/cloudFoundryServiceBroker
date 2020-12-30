@@ -2,6 +2,7 @@ from typing import Union, List
 import sys, json
 
 from cfClient import CfClient
+from logger import getLogger
 
 import openbrokerapi
 from openbrokerapi.api import ServiceBroker
@@ -22,6 +23,7 @@ class PlanManagerCfOrg(ServiceBroker):
 
     def __init__(self, cfClient: CfClient):
         self.cfClient = cfClient
+        self.logger = getLogger(cfClient.appSettings)
 
 
     def getPlanId(self) -> str:
@@ -48,6 +50,12 @@ class PlanManagerCfOrg(ServiceBroker):
 
         response = self.cfClient.v2.organizations._create(data = {'name': details.parameters['name']})
         orgGuid = response['metadata']['guid']
+        self.logger.info("created Org '{}' with OrgId: {} for InstanceId: {}, in OrgId: {} and SpaceId {}".format(
+            details.parameters['name'],
+            orgGuid, 
+            instance_id,
+            details.organization_guid,
+            details.space_guid))
         # org creation is also done via v2 api in cf cli.
         # there are problems with v3 creating orgs see /issues/orgCreation.py folder.
 
@@ -77,9 +85,11 @@ class PlanManagerCfOrg(ServiceBroker):
         url = "{}/v2/organizations/{}?async=false&recursive=true".format(self.cfClient.getBaseUrl(), orgGuid)
         try:
             self.cfClient.v2.organizations._delete(url)
+            self.logger.info("Deleted Org with Id: {}".format(orgGuid))
         except Exception as e:
             # delete service instance also if org was manually deleted in advance
             if "The organization could not be found:" not in str(e): raise e
+            self.logger.info("OrgId: {} was already deleted!".format(orgGuid))
             
 
         return DeprovisionServiceSpec(is_async=False)
@@ -99,11 +109,18 @@ class PlanManagerCfOrg(ServiceBroker):
             quotaName = details.parameters.get('quota')
             quotaGuid = self.cfClient.getQuotaGuidByName(quotaName)
             self.cfClient.setQuota(orgGuid, quotaGuid)
+            self.logger.info("Changed quota for OrgId: {} to '{}' with Id: {}.".format(
+                orgGuid,
+                quotaName,
+                quotaGuid))
 
         # Change org name
         if 'name' in details.parameters:
             orgName = details.parameters.get('name')
             # self.cfClient.v3.organizations.update(orgGuid, orgName, suspended=True)
             self.cfClient.v2.organizations._update(orgGuid, data={'name': orgName})
+            self.logger.info("Changed Org name for OrgId: {} to '{}'.".format(
+                orgGuid,
+                orgName))
             
         return UpdateServiceSpec(False)

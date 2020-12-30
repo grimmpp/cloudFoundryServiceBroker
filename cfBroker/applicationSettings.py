@@ -7,9 +7,8 @@ from logger import getLogger
 class ApplicationSettings(dict):
 
     def __init__(self):
-        # init logging
-        self.logger = logging.getLogger('AppSettings')
-        self.logger.setLevel(logging.INFO)
+        # init logging / start with log level 'INFO' until settings are read
+        self.logger = getLogger(self, 'INFO')
 
         fullFilename = os.path.dirname(__file__) + os.sep +  "settings.yml"
         # print("path: "+fullFilename)
@@ -28,7 +27,7 @@ class ApplicationSettings(dict):
         
         self.logger.info("Settings are loaded.")
 
-        getLogger(self)
+        self.logger = getLogger(self)
         logLevel = self['logging']['level']
         self.logger.info("Log level '{}' is set.".format(logLevel))
         
