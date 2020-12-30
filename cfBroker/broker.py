@@ -25,15 +25,17 @@ from cfClient import CfClient
 from applicationSettings import ApplicationSettings
 from planManagerCfOrg import PlanManagerCfOrg
 from planManagerAdminAccount import PlanManagerAdminAccount
+from logger import getLogger
 
 # Service Broker API Spec.: https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#catalog-management
 
 class Broker(ServiceBroker):
 
     def __init__(self, appSettings: ApplicationSettings, cfClient: CfClient):
+        # set logging
         self.appSettings = appSettings
-        self.logger = logging.getLogger('Borker')
-        self.logger.setLevel(logging.INFO)
+        self.logger = getLogger(self.appSettings)
+
         self.cfClient = cfClient
         self.planManagerCfOrg = PlanManagerCfOrg(self.cfClient)
         self.planManagerAdminAccount = PlanManagerAdminAccount(self.cfClient)
@@ -41,13 +43,13 @@ class Broker(ServiceBroker):
         self.planManagers = [self.planManagerCfOrg, self.planManagerAdminAccount]
 
 
-    def getPlanManagersByPlanId(self, planId):
+    def __getPlanManagersByPlanId__(self, planId):
         for pm in self.planManagers:
             if pm.getPlanId() == planId: return pm
         return None
 
 
-    def getListOfServicePlans(self):
+    def __getListOfServicePlans__(self):
         servicePlans = []
         for pm in self.planManagers:
             servicePlans.append(pm.getServicePlan())
@@ -61,7 +63,7 @@ class Broker(ServiceBroker):
             description='service description',
             bindable=False,
             instances_retrievable=True,
-            plans=self.getListOfServicePlans()
+            plans=self.__getListOfServicePlans__()
         )
 
 
@@ -84,7 +86,7 @@ class Broker(ServiceBroker):
                 async_allowed: bool,
                 **kwargs) -> ProvisionedServiceSpec:
     
-        planManager = self.getPlanManagersByPlanId(details.plan_id)
+        planManager = self.__getPlanManagersByPlanId__(details.plan_id)
         self.log(logging.INFO, planManager, instance_id, details)
         return planManager.provision(instance_id, details, async_allowed)
         
@@ -95,7 +97,7 @@ class Broker(ServiceBroker):
                     async_allowed: bool,
                     **kwargs) -> DeprovisionServiceSpec:
         
-        planManager = self.getPlanManagersByPlanId(details.plan_id)
+        planManager = self.__getPlanManagersByPlanId__(details.plan_id)
         self.log(logging.INFO, planManager, instance_id, details)
         if planManager != None:
             return planManager.deprovision(instance_id, details, async_allowed)
@@ -111,7 +113,7 @@ class Broker(ServiceBroker):
                **kwargs
                ) -> UpdateServiceSpec:
 
-        planManager = self.getPlanManagersByPlanId(details.plan_id)
+        planManager = self.__getPlanManagersByPlanId__(details.plan_id)
         self.log(logging.INFO, planManager, instance_id, details)
         if planManager != None:
             return planManager.update(instance_id, details, async_allowed)
@@ -126,7 +128,7 @@ class Broker(ServiceBroker):
              **kwargs
              ) -> Binding:
         
-        planManager = self.getPlanManagersByPlanId(details.plan_id)
+        planManager = self.__getPlanManagersByPlanId__(details.plan_id)
         self.log(logging.INFO, planManager, instance_id, details)
         return planManager.bind(instance_id, binding_id, details, async_allowed)
 
@@ -139,7 +141,7 @@ class Broker(ServiceBroker):
                **kwargs
                ) -> UnbindSpec:
         
-        planManager = self.getPlanManagersByPlanId(details.plan_id)
+        planManager = self.__getPlanManagersByPlanId__(details.plan_id)
         self.log(logging.INFO, planManager, instance_id, details)
         if planManager != None:
             return planManager.unbind(instance_id, binding_id, details, async_allowed)

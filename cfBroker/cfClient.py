@@ -3,6 +3,8 @@ import requests
 
 import json
 import os
+import logging
+from logger import getLogger
 
 from applicationSettings import ApplicationSettings
 
@@ -13,6 +15,7 @@ class CfClient(CloudFoundryClient):
     def __init__(self, appSettings: ApplicationSettings):
         self.requests = requests
         self.appSettings = appSettings
+        self.logger = getLogger(self.appSettings)
 
 
     def getBaseUrl(self):
@@ -37,7 +40,7 @@ class CfClient(CloudFoundryClient):
 
         super().__init__(target_endpoint, proxy=proxy, verify=self.verifySslCert)
         self.init_with_user_credentials(username, password)
-        print('Connection to Cloud Foundry is established!')
+        self.logger.info('Connection to Cloud Foundry is established!')
         self.checkCfAPI()
 
 
@@ -49,11 +52,11 @@ class CfClient(CloudFoundryClient):
         response = response.json()
         self.appSettings['CF_API_Info'] = response
         
-        print('UAA Base Url: {}'.format(self.getUaaBaseUrl()))
+        self.logger.info('UAA Base Url: {}'.format(self.getUaaBaseUrl()))
 
-        print('Cloud Foundry API Versions: ({})'.format(url) )
-        print('* Cloud Controller API Version: {}'.format( response['api_version'] ) )
-        print('* Open Service Broker API Version: {}'.format( response['osbapi_version'] ) )
+        self.logger.info('Cloud Foundry API Versions: ({})'.format(url) )
+        self.logger.info('* Cloud Controller API Version: {}'.format( response['api_version'] ) )
+        self.logger.info('* Open Service Broker API Version: {}'.format( response['osbapi_version'] ) )
 
 
     # needs to be done for testing
