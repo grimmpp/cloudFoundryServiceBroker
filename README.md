@@ -1,4 +1,4 @@
-# CloudFoundryServiceBroker
+# Cloud Foundry Service Broker
 
 This service brokers makes it possible to book Cloud Foundry Organizations or Admin Access to Cloud Foundry in the Cloud Foundry Marketplace. 
 
