@@ -35,3 +35,6 @@ You can either start the broker in the project directory with `python main.py` o
 In order to run the unit tests just execute `python -m unittest discover -v` in the project directory.
 ### Run Manual Command Line Tests
 In the test folder `test` you can find `cfRealAdminPlanTest.ps1` and `cfRealOrgPlanTest.ps1` which contain manual sample calls in order to test the broker functionality.
+
+## Development
+This service broker was developed and tested against [cfdev](https://github.com/cloudfoundry-incubator/cfdev).
