@@ -1,3 +1,5 @@
+import logging
+
 from applicationSettings import ApplicationSettings
 from broker import Broker
 from cfClient import CfClient
@@ -6,6 +8,7 @@ from server import Server
 class App():
 
     def start(self):
+        logging.basicConfig(level=logging.INFO)
         self.printHeadline()
 
         appSettings = ApplicationSettings()

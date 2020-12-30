@@ -23,6 +23,6 @@ class Server():
         print('Check the catalog at: ')
         print('> curl http://127.0.0.1:{}/v2/catalog -H "X-Broker-API-Version: 2.14"'.format(port))
         app = Flask(__name__)
-        openbroker_bp = api.get_blueprint(self.broker, api.BrokerCredentials(brokerUsername, brokerPassword), logging)
+        openbroker_bp = api.get_blueprint(self.broker, api.BrokerCredentials(brokerUsername, brokerPassword), logging.getLogger('cfBorker'))
         app.register_blueprint(openbroker_bp)
         app.run("0.0.0.0", port=port)

@@ -52,7 +52,6 @@ class PlanManagerAdminAccount(ServiceBroker):
                 details: ProvisionDetails,
                 async_allowed: bool,
                 **kwargs) -> ProvisionedServiceSpec:
-        print("test")
         return ProvisionedServiceSpec()
 
 
