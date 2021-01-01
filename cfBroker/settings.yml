@@ -14,3 +14,11 @@ Broker_API:
   port: 5000
   username: admin
   password: admin
+
+actuator:
+  enabled: false
+  appUrl: http://localhost:5000
+  endpoint: ""
+  sprintBootAdminUrl: http://localhost:8080/instances
+  username: ""
+  password: ""

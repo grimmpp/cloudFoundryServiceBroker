@@ -28,6 +28,7 @@ from planManagerAdminAccount import PlanManagerAdminAccount
 from logger import getLogger
 
 # Service Broker API Spec.: https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#catalog-management
+# python lib OpenBrokerApi: https://pypi.org/project/openbrokerapi/
 
 class Broker(ServiceBroker):
 

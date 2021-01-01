@@ -13,7 +13,7 @@ class App():
 
         appSettings = ApplicationSettings()
         cfClient = CfClient(appSettings)
-        cfClient.connect()
+        # cfClient.connect()
         cfBroker = Broker(appSettings, cfClient)
 
         server = Server(cfBroker, appSettings)
