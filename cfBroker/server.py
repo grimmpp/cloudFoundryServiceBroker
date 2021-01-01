@@ -1,4 +1,5 @@
 import logging
+from datetime import date, datetime, time
 
 from flask import Flask
 
@@ -37,21 +38,32 @@ class Server():
         app.register_blueprint(openbroker_bp)
 
         # register actuator
-        # https://pypi.org/project/pyctuator/
-        # https://github.com/SolarEdgeTech/pyctuator
-        # run spring boot admin app for developer purpose docker run --rm -p 8080:8080 michayaak/spring-boot-admin:2.2.3-1
-        if self.appSettings['actuator']['enabled']:
-            self.logger.info("Start Actuator: ")
-            auth = HTTPBasicAuth(self.appSettings['actuator']['username'], self.appSettings['actuator']['password'])
-            pyctuator = Pyctuator(
-                app,
-                app_name = 'CfBroker',
-                app_url = self.appSettings['actuator']['appUrl'],
-                pyctuator_endpoint_url = self.appSettings['actuator']['appUrl'] + self.appSettings['actuator']['endpoint'],
-                registration_url = self.appSettings['actuator']['sprintBootAdminUrl'],
-                registration_auth = auth
-            )
-            pyctuator.register_environment_provider("ApplicationSettings", lambda: self.appSettings)
-
+        if self.appSettings['actuator']['enabled']: self.__addActuator__(app)
+            
         # run web server
         app.run("0.0.0.0", port=port)
+
+
+    # https://pypi.org/project/pyctuator/
+    # https://github.com/SolarEdgeTech/pyctuator
+    # run spring boot admin app for developer purpose "docker run --rm -p 8080:8080 michayaak/spring-boot-admin:2.2.3-1"
+    def __addActuator__(self, app):
+        self.logger.info("Start Actuator: ")
+        auth = HTTPBasicAuth(self.appSettings['actuator']['username'], self.appSettings['actuator']['password'])
+        
+        pyctuator = Pyctuator(
+            app,
+            app_name = 'CfBroker',
+            app_url = self.appSettings['actuator']['appUrl'],
+            pyctuator_endpoint_url = self.appSettings['actuator']['appUrl'] + self.appSettings['actuator']['endpoint'],
+            registration_url = self.appSettings['actuator']['sprintBootAdminUrl'],
+            registration_auth = auth
+        )
+        
+        pyctuator.register_environment_provider("ApplicationSettings", lambda: self.appSettings)
+        
+        pyctuator.set_git_info(
+            commit = self.appSettings['git-info']['commit'],
+            time = self.appSettings['git-info']['time'],
+            branch = self.appSettings['git-info']['branch'],
+        )

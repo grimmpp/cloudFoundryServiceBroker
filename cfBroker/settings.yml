@@ -16,7 +16,7 @@ Broker_API:
   password: admin
 
 actuator:
-  enabled: false
+  enabled: true
   appUrl: http://localhost:5000
   endpoint: ""
   sprintBootAdminUrl: http://localhost:8080/instances
