@@ -50,6 +50,11 @@ class ApplicationSettings(dict):
         self.setDefaultSetting('git-info', 'time')
         self.tryToSetGitInfo()
 
+        self.setDefaultSetting('build-info', 'name')
+        self.setDefaultSetting('build-info', 'version')
+        self.setDefaultSetting('build-info', 'time')
+        self.tryToSetBuildInfo()
+
         # print( json.dumps(self))
 
 
@@ -89,3 +94,13 @@ class ApplicationSettings(dict):
             self.logger.info("Git info was loaded (branch: {}, commit: {}".format(branch, commit))
         except Exception:
             self.logger.error("Was not able to get git information.", exc_info=True)
+
+
+    def tryToSetBuildInfo(self):
+        try:
+            from packageInfo import package_name, package_version
+            self['build-info']['name'] = package_name
+            self['build-info']['version'] = package_version
+            self['build-info']['time'] = self['git-info']['time']
+        except Exception:
+            self.logger.error("Was not able to get build information.", exc_info=True)

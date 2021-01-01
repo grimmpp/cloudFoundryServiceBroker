@@ -67,3 +67,9 @@ class Server():
             time = self.appSettings['git-info']['time'],
             branch = self.appSettings['git-info']['branch'],
         )
+
+        pyctuator.set_build_info(
+            name = self.appSettings['build-info']['name'],
+            version = self.appSettings['build-info']['version'],
+            time = self.appSettings['build-info']['time']
+        )
