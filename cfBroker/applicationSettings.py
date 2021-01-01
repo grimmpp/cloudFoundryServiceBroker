@@ -3,8 +3,11 @@ import json
 import logging
 import os
 from logger import getLogger
+from flask import Flask
 
 class ApplicationSettings(dict):
+
+    settingsEnvVarMapping=dict()
 
     def __init__(self):
         # init logging / start with log level 'INFO' until settings are read
@@ -37,7 +40,13 @@ class ApplicationSettings(dict):
 
 
     def setSetting(self, settingsSection: str, settingName: str, osEnvName: str, defaultValue=""):
+        self.settingsEnvVarMapping["{}.{}".format(settingsSection, settingName)]=osEnvName
         if settingName not in self[settingsSection]: 
             self[settingsSection][settingName] = defaultValue
         self[settingsSection][settingName] = os.getenv(osEnvName, self[settingsSection][settingName])
-        
+
+    def getListOfEnvVars(self):
+        return self.settingsEnvVarMapping.values()
+
+    def getListOfSettingsKeys(self):
+        return self.settingsEnvVarMapping.keys()

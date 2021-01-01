@@ -12,7 +12,6 @@ class App():
         self.printHeadline()
 
         appSettings = ApplicationSettings()
-        
         cfClient = CfClient(appSettings)
         cfClient.connect()
         cfBroker = Broker(appSettings, cfClient)
