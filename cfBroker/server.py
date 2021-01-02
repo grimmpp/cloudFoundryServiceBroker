@@ -58,6 +58,7 @@ class Server():
         pyctuator = Pyctuator(
             app,
             app_name = 'CfBroker',
+            app_description = 'Broker which offers access to Cloud Foundry through CF Orgs or Admin Access.',
             app_url = self.appSettings['actuator']['appUrl'],
             pyctuator_endpoint_url = self.appSettings['actuator']['appUrl'] + self.appSettings['actuator']['endpoint'],
             registration_url = self.appSettings['actuator']['sprintBootAdminUrl'],
