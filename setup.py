@@ -1,11 +1,13 @@
 import setuptools
 
+from packageInfo import package_name, package_version
+
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-   name='cfBroker',
-   version='0.0.1',
+   name=package_name,
+   version=package_version,
    author='Philipp Grimm',
    author_email="grimm_philipp@web.de",
    description='CF Broker for creating and ordering CF Orgs, Admin Accounts, ...',

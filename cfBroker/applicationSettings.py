@@ -36,8 +36,8 @@ class ApplicationSettings(dict):
         self.setDefaultSetting('actuator', 'appUrl', defaultValue='http://localhost:'+str(port))
         self.setDefaultSetting('actuator', 'endpoint')
         self.setDefaultSetting('actuator', 'sprintBootAdminUrl', defaultValue='http://localhost:8080/instances')
-        self.setDefaultSetting('actuator', 'username')
-        self.setDefaultSetting('actuator', 'password')
+        self.setDefaultSetting('actuator', 'sprintBootAdminUsername')
+        self.setDefaultSetting('actuator', 'sprintBootAdminPassword')
         
         self.logger.info("Settings are loaded.")
 

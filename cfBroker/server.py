@@ -3,6 +3,9 @@ from datetime import date, datetime, time
 
 from flask import Flask
 
+from flask import request, abort, current_app
+from werkzeug.http import parse_authorization_header
+
 from requests.auth import HTTPBasicAuth
 
 from broker import Broker
@@ -42,6 +45,7 @@ class Server():
             
         # run web server
         app.run("0.0.0.0", port=port)
+        
 
 
     # https://pypi.org/project/pyctuator/
@@ -49,7 +53,7 @@ class Server():
     # run spring boot admin app for developer purpose "docker run --rm -p 8080:8080 michayaak/spring-boot-admin:2.2.3-1"
     def __addActuator__(self, app):
         self.logger.info("Start Actuator: ")
-        auth = HTTPBasicAuth(self.appSettings['actuator']['username'], self.appSettings['actuator']['password'])
+        auth = HTTPBasicAuth(self.appSettings['actuator']['sprintBootAdminUsername'], self.appSettings['actuator']['sprintBootAdminPassword'])
         
         pyctuator = Pyctuator(
             app,
@@ -73,3 +77,24 @@ class Server():
             version = self.appSettings['build-info']['version'],
             time = self.appSettings['build-info']['time']
         )
+
+        # in order to add basic auth to the pyctuator blueprint: remove it from web server, add the basicAuth method, and register it again.
+        blueprint = app.blueprints['flask_blueprint']
+        del app.blueprints['flask_blueprint']
+        # add basic auth
+        blueprint.before_request(self.check_blueprint_auth)
+        app.register_blueprint(blueprint)
+
+    
+    def check_blueprint_auth(self):
+        header = parse_authorization_header(request.headers['Authorization'])
+        if header == None: header = parse_authorization_header(request.headers['http_Authorization'])
+        
+        if header == None:
+            print('Authorization header not found for authentication')
+            return abort(401, 'Authorization header not found for authentication')
+
+        if not (
+            header['username'] == self.appSettings['Broker_API']['username'] 
+            and header['password'] == self.appSettings['Broker_API']['password']): 
+            return abort(401, 'Authorization error')

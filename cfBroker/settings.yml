@@ -20,5 +20,5 @@ actuator:
   appUrl: http://localhost:5000
   endpoint: ""
   sprintBootAdminUrl: http://localhost:8080/instances
-  username: ""
-  password: ""
+  sprintBootAdminUsername: ""
+  sprintBootAdminPassword: ""
