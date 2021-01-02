@@ -83,7 +83,7 @@ class Server():
         del app.blueprints['flask_blueprint']
         # add basic auth
         blueprint.before_request(self.check_blueprint_auth)
-        app.register_blueprint(blueprint)
+        app.register_blueprint(blueprint, url_prefix=pyctuator.pyctuator_impl.pyctuator_endpoint_path_prefix)
 
     
     def check_blueprint_auth(self):
