@@ -12,6 +12,7 @@ from broker import Broker
 from cfClient import CfClient
 from applicationSettings import ApplicationSettings
 from logger import getLogger
+from extendedApi import ExtendedApi
 
 from openbrokerapi import api
 
@@ -21,6 +22,7 @@ from pyctuator.pyctuator import Pyctuator
 class Server():
     def __init__(self, broker: Broker, appSettings: ApplicationSettings):
         self.broker = broker
+        self.cfClient = broker.cfClient
         self.appSettings = appSettings
         self.logger = getLogger(self.appSettings)
 
@@ -39,6 +41,11 @@ class Server():
         loggerForBrokerLib.setLevel(self.appSettings['logging']['level'])
         openbroker_bp = api.get_blueprint(self.broker, api.BrokerCredentials(brokerUsername, brokerPassword), loggerForBrokerLib)
         app.register_blueprint(openbroker_bp)
+
+        # register extended api
+        extendedApiBlueprint = ExtendedApi(self.appSettings, self.cfClient).getBlueprint()
+        extendedApiBlueprint.before_request(self.check_blueprint_auth)
+        app.register_blueprint(extendedApiBlueprint)
 
         # register actuator
         if self.appSettings['actuator']['enabled']: self.__addActuator__(app)

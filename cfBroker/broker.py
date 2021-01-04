@@ -14,7 +14,8 @@ from openbrokerapi.service_broker import (
     BindDetails,
     Binding,
     UnbindDetails,
-    UnbindSpec
+    UnbindSpec,
+    GetInstanceDetailsSpec
 )
 
 import json
@@ -105,6 +106,20 @@ class Broker(ServiceBroker):
 
         else: 
             return DeprovisionServiceSpec(is_async=False)
+
+
+    def get_instance(self,
+                     instance_id: str,
+                     **kwargs
+                     ) -> GetInstanceDetailsSpec:
+        serviceInstance = self.cfClient.v2.service_instances.get(instance_id)
+        #TODO: ...
+        return GetInstanceDetailsSpec(
+            service_id="",
+            plan_id="",
+            dashboard_url="",
+            parameters=""
+        )
 
 
     def update(self,

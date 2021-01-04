@@ -192,4 +192,10 @@ class CfClient(CloudFoundryClient):
         uaaConfirmation = response.json()
 
 
-
+    def getServiceInstancesByPlanId(self, planId, page=1, pageSize=50):
+        url = '{}/v2/service_plans/{}/service_instances?page={}&results-per-page={}'.format(self.getBaseUrl(), planId, page, pageSize)
+        headers = self.getDefaultHeaders()
+        
+        response = self.requests.get(url, headers=headers, verify=self.verifySslCert)
+        response.raise_for_status()
+        return response.json()
